@@ -10,51 +10,51 @@ from streamlit_option_menu import option_menu
 st.set_page_config(page_title="Loan Default Predictor - Xente", layout="wide")
 
 # ------------------------------------------------
-# CUSTOM STYLING (Updated text color to black in inputs)
+# CUSTOM STYLING (Yellow and Black Theme)
 # ------------------------------------------------
 st.markdown("""
     <style>
         [data-testid="stSidebar"] {
-            background-color: #DFF0D8 !important;
+            background-color: #FFF9C4 !important;
         }
         [data-testid="stSidebar"] > div:first-child {
             border-right: none;
         }
         html, body, [data-testid="stAppViewContainer"] > .main {
-            background-color: #F9F9F9 !important;
+            background-color: #FFFDE7 !important;
             color: #000000 !important;
         }
         .stSelectbox > div,
         .stSelectbox div[data-baseweb="select"] > div {
-            background-color: #DFF0D8 !important;
+            background-color: #FFF9C4 !important;
             border-radius: 8px;
         }
         input[type="number"],
         input[type="text"] {
-            background-color: #DFF0D8 !important;
+            background-color: #FFF9C4 !important;
             color: #000000 !important;
             border-radius: 8px;
             padding: 0.4rem;
         }
         div[data-baseweb="slider"] > div > div > div:nth-child(2) {
-            background: #3C763D !important;
+            background: #FBC02D !important;
         }
         div[data-baseweb="slider"] > div > div > div:nth-child(3) {
             background: #d0d0d0 !important;
         }
         div[data-baseweb="slider"] [role="slider"] {
-            background-color: #3C763D !important;
+            background-color: #FBC02D !important;
         }
         div.stButton > button {
-            background-color: #3C763D !important;
-            color: white !important;
+            background-color: #FBC02D !important;
+            color: black !important;
             border-radius: 8px !important;
             height: 3em;
             padding: 0.6rem 1.5rem;
             border: none;
         }
         div.stButton > button:hover {
-            background-color: #2E5E2A !important;
+            background-color: #F9A825 !important;
         }
         .block-container {
             padding-top: 2rem;
@@ -81,17 +81,17 @@ with st.sidebar:
         default_index=1,
         orientation="vertical",
         styles={
-            "container": {"padding": "0!important", "background-color": "#DFF0D8"},
-            "icon": {"color": "#3C763D", "font-size": "20px"},
+            "container": {"padding": "0!important", "background-color": "#FFF9C4"},
+            "icon": {"color": "#FBC02D", "font-size": "20px"},
             "nav-link": {
                 "font-size": "16px",
                 "text-align": "left",
                 "margin": "0px",
-                "--hover-color": "#C8E5BC",
-                "color": "#333333"
+                "--hover-color": "#FFF176",
+                "color": "#000000"
             },
             "nav-link-selected": {
-                "background-color": "#B2D8A3",
+                "background-color": "#FDD835",
                 "color": "#000000"
             },
         },
@@ -111,13 +111,13 @@ elif selected == "Predictor":
     st.title("📊 Predict Loan Default")
     st.write("Enter customer loan details below:")
 
-    # Input fields based on updated model features
+    # Input fields
     product_category = st.selectbox("Product Category", ['Airtime', 'Data Bundles', 'Retail', 'Utility Bills', 'TV', 'Financial Services', 'Movies'])
     amount_loan = st.number_input("Amount of Loan", min_value=50.0, max_value=100000.0, value=5000.0)
     total_amount = st.number_input("Total Amount", min_value=50.0, max_value=100000.0, value=5000.0)
 
     if st.button("Predict Default Probability"):
-        # Manual encoding for product category
+        # Encoding
         product_category_mapping = {
             'Airtime': 0,
             'Data Bundles': 1,
@@ -129,14 +129,13 @@ elif selected == "Predictor":
         }
         product_category_encoded = product_category_mapping.get(product_category, -1)
 
-        # Form input dataframe
+        # Create input DataFrame
         input_data = pd.DataFrame([{
             'ProductCategory': product_category_encoded,
             'AmountLoan': amount_loan,
             'TotalAmount': total_amount
         }])
 
-        # Ensure correct order and scale
         input_data = input_data[X_columns]
         scaled_input = scaler.transform(input_data)
         final_input = pd.DataFrame(scaled_input, columns=X_columns)
